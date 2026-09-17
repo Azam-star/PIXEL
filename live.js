@@ -112,13 +112,18 @@ async function main() {
   let lastHandledRead = 0;
   let lastHandledBlur = 0;
   let lastHandledReadMode = 0;
+  let lastTabSyncTime = 0;
   let isExecuting = false;
 
   const pollInterval = setInterval(async () => {
     if (isExecuting) return;
     try {
-      // 1. Maintain HUD presence across all open tabs
-      await syncAllTabsHud();
+      const now = Date.now();
+      // 1. Maintain HUD presence across all open tabs (throttled to avoid CDP socket thrashing)
+      if (now - lastTabSyncTime > 1500) {
+        lastTabSyncTime = now;
+        await syncAllTabsHud();
+      }
 
       // 2. Detect if user switched tabs in Chrome
       const visibleTab = await session.getVisibleTab();
@@ -251,8 +256,8 @@ async function main() {
         await session.client.Runtime.evaluate({
           expression: generateUpdateHudStatusScript({
             status: 'EXECUTING',
-            color: '#a855f7',
-            message: `Executing: ${taskPrompt}`,
+            color: '#c084fc',
+            message: `Starting: ${taskPrompt}`,
           }),
         });
 
@@ -267,7 +272,7 @@ async function main() {
           await session.client.Runtime.evaluate({
             expression: generateUpdateHudStatusScript({
               status: 'READY',
-              color: '#93c5fd',
+              color: '#34d399',
               message: 'Task completed successfully.',
             }),
           });
@@ -290,7 +295,7 @@ async function main() {
       // Re-synchronize HUD across open tabs on error or navigation
       await syncAllTabsHud();
     }
-  }, 400);
+  }, 250);
 
   // Terminal CLI input handler (Interactive shell)
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
