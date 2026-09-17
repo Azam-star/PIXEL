@@ -28,13 +28,14 @@ const { callModel } = require('./lib/model');
 
 const PORT = process.env.PORT || 3000;
 
-// Built-in Visual Demo Crops
+// Built-in Visual Demo Crops with offline SVG fallbacks
 const DEMO_CROPS = [
   {
     id: 'isro_canvas',
     name: 'ISRO Telemetry Canvas Chart',
     category: 'Canvas Graphic',
     imageUrl: 'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=500&auto=format&fit=crop&q=60',
+    fallbackSvg: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='280' viewBox='0 0 500 280'><rect width='100%25' height='100%25' fill='%23050c1e'/><text x='30' y='45' fill='%2338bdf8' font-family='sans-serif' font-weight='bold' font-size='16'>ISRO Orbital Telemetry Canvas (Simulated Crop)</text><path d='M 40 200 Q 150 60 260 140 T 460 70' fill='none' stroke='%2310b981' stroke-width='3'/><circle cx='460' cy='70' r='6' fill='%23f59e0b'/><rect x='20' y='250' width='160' height='26' rx='4' fill='%236366f1'/><text x='35' y='267' fill='white' font-size='11' font-family='sans-serif'>Export Telemetry CSV</text><rect x='190' y='250' width='140' height='26' rx='4' fill='%230ea5e9'/><text x='205' y='267' fill='white' font-size='11' font-family='sans-serif'>Live Orbit Sync</text></svg>",
     description: 'Orbital velocity telemetry graph with trajectory coordinates and altitude bands.',
     elements: [
       { ref: '@r1', role: 'canvas-region', name: 'Telemetry Plot', bbox: [20, 30, 420, 220] },
@@ -47,6 +48,7 @@ const DEMO_CROPS = [
     name: 'ISRO Scientist Auth Portal',
     category: 'Form / Security',
     imageUrl: 'https://images.unsplash.com/photo-1517976487577-507963283286?w=500&auto=format&fit=crop&q=60',
+    fallbackSvg: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='280' viewBox='0 0 500 280'><rect width='100%25' height='100%25' fill='%230b1120'/><text x='30' y='35' fill='%23f8fafc' font-family='sans-serif' font-weight='bold' font-size='15'>Department Authentication Vault</text><rect x='30' y='55' width='320' height='36' rx='6' fill='%231e293b' stroke='%23334155'/><text x='45' y='78' fill='%2394a3b8' font-size='12' font-family='sans-serif'>scientist.isro@gov.in</text><rect x='30' y='110' width='320' height='36' rx='6' fill='%231e293b' stroke='%23334155'/><text x='45' y='133' fill='%2394a3b8' font-size='14' font-family='sans-serif'>••••••••••••••••</text><rect x='30' y='165' width='180' height='38' rx='6' fill='%236366f1'/><text x='48' y='189' fill='white' font-weight='bold' font-size='12' font-family='sans-serif'>Authenticate Securely</text></svg>",
     description: 'Restricted department portal containing credential forms and classified IDs.',
     elements: [
       { ref: '@e1', role: 'textbox', name: 'Scientist Email (scientist.isro@gov.in)', bbox: [30, 40, 320, 40] },
@@ -59,6 +61,7 @@ const DEMO_CROPS = [
     name: 'Lunar Payload Telemetry',
     category: 'Spacecraft UI',
     imageUrl: 'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=500&auto=format&fit=crop&q=60',
+    fallbackSvg: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='280' viewBox='0 0 500 280'><rect width='100%25' height='100%25' fill='%23030712'/><text x='40' y='35' fill='%2338bdf8' font-family='sans-serif' font-weight='bold' font-size='15'>Chandrayaan Rover Telemetry</text><rect x='40' y='50' width='160' height='34' rx='4' fill='%23059669'/><text x='55' y='72' fill='white' font-size='11' font-family='sans-serif'>Drill Subsystem Start</text><text x='40' y='118' fill='%2334d399' font-size='13' font-family='sans-serif'>Rover Battery: 94.2% Optimal</text><rect x='40' y='140' width='380' height='120' rx='6' fill='%23111827' stroke='%23374151'/><text x='55' y='165' fill='%239ca3af' font-size='11' font-family='sans-serif'>Thermal Distribution Matrix [Canvas Surface]</text></svg>",
     description: 'Chandrayaan rover subsystem dashboard showing battery levels and surface thermal sensors.',
     elements: [
       { ref: '@e1', role: 'button', name: 'Drill Subsystem Start', bbox: [40, 50, 160, 38] },
@@ -173,17 +176,19 @@ function getHtml() {
 
     .bbox-highlight {
       position: absolute;
-      border: 2px solid var(--accent);
-      background: rgba(6, 182, 212, 0.18);
+      border: 2px solid #38bdf8;
+      background: rgba(56, 189, 248, 0.22);
       border-radius: 4px;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
       pointer-events: none;
       transition: all 0.2s;
     }
     .bbox-label {
-      position: absolute; top: -18px; left: 0;
-      background: #0f172a; color: var(--accent);
-      font-size: 10px; font-weight: 700; padding: 1px 6px;
-      border-radius: 3px; border: 1px solid var(--accent);
+      position: absolute; top: -20px; left: 0;
+      background: #0369a1; color: #ffffff;
+      font-size: 10px; font-weight: 700; padding: 2px 7px;
+      border-radius: 4px; border: 1px solid #38bdf8;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
       white-space: nowrap;
     }
 
@@ -254,11 +259,11 @@ function getHtml() {
   </header>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('vlm')">👁️ Live VLM Perception</button>
-    <button class="tab-btn" onclick="switchTab('router')">🧠 SLM Confidence Router</button>
-    <button class="tab-btn" onclick="switchTab('privacy')">🛡️ 5-Stage Privacy X-Ray</button>
-    <button class="tab-btn" onclick="switchTab('lora')">🔄 LoRA Personalization Studio</button>
-    <button class="tab-btn" onclick="switchTab('benchmark')">📊 Model Benchmark Comparison</button>
+    <button class="tab-btn active" data-tab="vlm" onclick="switchTab('vlm', this)">👁️ Live VLM Perception</button>
+    <button class="tab-btn" data-tab="router" onclick="switchTab('router', this)">🧠 SLM Confidence Router</button>
+    <button class="tab-btn" data-tab="privacy" onclick="switchTab('privacy', this)">🛡️ 5-Stage Privacy X-Ray</button>
+    <button class="tab-btn" data-tab="lora" onclick="switchTab('lora', this)">🔄 LoRA Personalization Studio</button>
+    <button class="tab-btn" data-tab="benchmark" onclick="switchTab('benchmark', this)">📊 Model Benchmark Comparison</button>
   </div>
 
   <main>
@@ -446,11 +451,13 @@ SYSTEM """You are PIXEL Personalized Local SLM."""</div>
     const DEMO_DATA = ${JSON.stringify(DEMO_CROPS)};
     let currentCrop = DEMO_DATA[0];
 
-    function switchTab(id) {
+    function switchTab(id, btn) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById('tab-' + id).classList.add('active');
+      const activeBtn = btn || document.querySelector('[data-tab="' + id + '"]');
+      if (activeBtn) activeBtn.classList.add('active');
+      const panel = document.getElementById('tab-' + id);
+      if (panel) panel.classList.add('active');
 
       if (id === 'privacy') testPrivacy();
       if (id === 'benchmark') loadBenchmark();
@@ -458,8 +465,14 @@ SYSTEM """You are PIXEL Personalized Local SLM."""</div>
 
     function loadCrop() {
       const idx = document.getElementById('crop-select').value;
-      currentCrop = DEMO_DATA[idx];
-      document.getElementById('crop-img').src = currentCrop.imageUrl;
+      currentCrop = DEMO_DATA[idx] || DEMO_DATA[0];
+      const img = document.getElementById('crop-img');
+      img.onerror = function() {
+        if (currentCrop && currentCrop.fallbackSvg) {
+          img.src = currentCrop.fallbackSvg;
+        }
+      };
+      img.src = currentCrop.imageUrl;
       renderBboxes();
     }
 
@@ -476,7 +489,7 @@ SYSTEM """You are PIXEL Personalized Local SLM."""</div>
 
         const lbl = document.createElement('div');
         lbl.className = 'bbox-label';
-        lbl.textContent = el.ref + ' ' + el.role;
+        lbl.textContent = '👁️ Seeing: ' + el.ref + ' (' + el.role + ')';
         box.appendChild(lbl);
         container.appendChild(box);
       }
@@ -488,56 +501,76 @@ SYSTEM """You are PIXEL Personalized Local SLM."""</div>
     }
 
     async function runVlmInference() {
-      document.getElementById('vlm-output').textContent = 'Perceiving visual crop via local VLM...';
-      const res = await fetch('/api/vlm', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cropId: currentCrop.id })
-      });
-      const data = await res.json();
-      document.getElementById('vlm-output').textContent = JSON.stringify(data, null, 2);
+      try {
+        document.getElementById('vlm-output').textContent = 'Perceiving visual crop via local VLM...';
+        const res = await fetch('/api/vlm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cropId: currentCrop.id })
+        });
+        const data = await res.json();
+        document.getElementById('vlm-output').textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('vlm-output').textContent = 'Error: ' + err.message;
+      }
     }
 
     async function simulateRouting() {
-      const intent = document.getElementById('router-intent').value;
-      const role = document.getElementById('router-role').value;
-      const res = await fetch('/api/route', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ intent, role })
-      });
-      const data = await res.json();
-      document.getElementById('router-conf-val').textContent = data.confidence.toFixed(2);
-      document.getElementById('router-decision-badge').textContent = data.decision.route;
-      document.getElementById('router-tier-label').textContent = data.modelTier;
-      document.getElementById('router-privacy-status').textContent = data.decision.route === 'LOCAL' ? '100% On-Device Only' : 'Off-Device Escalation (Redacted)';
-      document.getElementById('router-privacy-status').style.color = data.decision.route === 'LOCAL' ? 'var(--success)' : 'var(--warning)';
-      document.getElementById('router-log').textContent = JSON.stringify(data, null, 2);
+      try {
+        const intent = document.getElementById('router-intent').value;
+        const role = document.getElementById('router-role').value;
+        const res = await fetch('/api/route', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ intent, role })
+        });
+        const data = await res.json();
+        document.getElementById('router-conf-val').textContent = data.confidence.toFixed(2);
+        document.getElementById('router-decision-badge').textContent = data.decision.route;
+        document.getElementById('router-tier-label').textContent = data.modelTier;
+        document.getElementById('router-privacy-status').textContent = data.decision.route === 'LOCAL' ? '100% On-Device Only' : 'Off-Device Escalation (Redacted)';
+        document.getElementById('router-privacy-status').style.color = data.decision.route === 'LOCAL' ? 'var(--success)' : 'var(--warning)';
+        document.getElementById('router-log').textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('router-log').textContent = 'Error: ' + err.message;
+      }
     }
 
     async function testPrivacy() {
-      const text = document.getElementById('privacy-input').value;
-      const res = await fetch('/api/privacy', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
-      });
-      const data = await res.json();
-      document.getElementById('privacy-count').textContent = data.piiTypes.length + ' types detected (' + data.piiTypes.join(', ') + ')';
-      document.getElementById('privacy-risk').textContent = data.riskScore.toFixed(2) + ' / 1.0 (' + data.gateStatus + ')';
-      document.getElementById('privacy-output').textContent = data.redactedText;
+      try {
+        const text = document.getElementById('privacy-input').value;
+        const res = await fetch('/api/privacy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+        const data = await res.json();
+        document.getElementById('privacy-count').textContent = data.piiTypes.length + ' types detected (' + data.piiTypes.join(', ') + ')';
+        document.getElementById('privacy-risk').textContent = data.riskScore.toFixed(2) + ' / 1.0 (' + data.gateStatus + ')';
+        document.getElementById('privacy-output').textContent = data.redactedText;
+      } catch (err) {
+        document.getElementById('privacy-output').textContent = 'Error: ' + err.message;
+      }
     }
 
     async function triggerLoraTraining() {
-      const res = await fetch('/api/lora/train', { method: 'POST' });
-      const data = await res.json();
-      alert('✓ LoRA Fine-Tuning Step Complete!\nAdapter written to lora-adapters/pixel-user-adapter.gguf');
+      try {
+        const res = await fetch('/api/lora/train', { method: 'POST' });
+        const data = await res.json();
+        alert('✓ LoRA Fine-Tuning Step Complete!\nAdapter written to lora-adapters/pixel-user-adapter.gguf');
+      } catch (err) {
+        alert('LoRA Training Error: ' + err.message);
+      }
     }
 
     async function loadBenchmark() {
-      const res = await fetch('/api/benchmark');
-      const data = await res.json();
-      document.getElementById('benchmark-view').textContent = data.markdown;
+      try {
+        const res = await fetch('/api/benchmark');
+        const data = await res.json();
+        document.getElementById('benchmark-view').textContent = data.markdown;
+      } catch (err) {
+        document.getElementById('benchmark-view').textContent = 'Error: ' + err.message;
+      }
     }
 
     // Initialize
@@ -660,18 +693,32 @@ const server = http.createServer(async (req, res) => {
   res.end('Not Found');
 });
 
-server.listen(PORT, () => {
-  console.log('\n=============================================================');
-  console.log(`  🚀 PIXEL Visual Perception Studio running on:`);
-  console.log(`     👉 http://localhost:${PORT}`);
-  console.log('=============================================================\n');
+function startServer(port) {
+  server.removeAllListeners('error');
+  server.once('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.log(`[Studio] Port ${port} is already in use. Trying port ${port + 1}...`);
+      startServer(port + 1);
+    } else {
+      console.error('[Studio] Server error:', err);
+    }
+  });
 
-  // Auto-open browser in Windows
-  if (process.platform === 'win32') {
-    exec(`start http://localhost:${PORT}`);
-  } else if (process.platform === 'darwin') {
-    exec(`open http://localhost:${PORT}`);
-  } else {
-    exec(`xdg-open http://localhost:${PORT}`);
-  }
-});
+  server.listen(port, () => {
+    console.log('\n=============================================================');
+    console.log(`  🚀 PIXEL Visual Perception Studio running on:`);
+    console.log(`     👉 http://localhost:${port}`);
+    console.log('=============================================================\n');
+
+    // Auto-open browser in Windows
+    if (process.platform === 'win32') {
+      exec(`start http://localhost:${port}`);
+    } else if (process.platform === 'darwin') {
+      exec(`open http://localhost:${port}`);
+    } else {
+      exec(`xdg-open http://localhost:${port}`);
+    }
+  });
+}
+
+startServer(Number(PORT));

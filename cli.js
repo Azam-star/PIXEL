@@ -12,6 +12,17 @@ function parseArgs() {
     else if (arg === '--in-viewport-only') opts.inViewportOnly = true;
     else if (arg === '--pretty')      opts.pretty = true;
     else if (arg === '--launch')      opts._launchOnly = true;
+    else if (arg === '--help' || arg === '-h') {
+      console.log(`Usage: node cli.js [options]
+Options:
+  --launch             Launch Chrome with remote debugging on port 9222
+  --tree               Extract accessibility tree format
+  --lean               Extract simplified lean format
+  --in-viewport-only   Extract only elements currently in viewport
+  --pretty             Format JSON output
+  --help, -h           Show this help`);
+      process.exit(0);
+    }
     else throw new Error(`unknown option: ${arg}`);
   }
   return opts;

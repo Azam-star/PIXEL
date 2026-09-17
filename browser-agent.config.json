@@ -8,18 +8,18 @@
       "timeoutMs": 30000
     },
     "primary": {
-      "provider": "groq",
-      "model": null,
+      "provider": "ollama",
+      "model": "qwen2.5:3b",
       "reasoningEffort": null,
       "maxTokens": 4096,
-      "timeoutMs": 10000
+      "timeoutMs": 30000
     },
     "vision": {
-      "provider": "groq",
-      "model": null,
+      "provider": "ollama",
+      "model": "moondream",
       "prompt": "Describe the image/page in detail, 1500-2000 chars.",
       "maxTokens": 1024,
-      "timeoutMs": 10000
+      "timeoutMs": 30000
     },
     "reflect": {
       "enabled": false,
@@ -51,7 +51,7 @@
     "pollMs": 1500,
     "maxNoChangePolls": 3,
     "maxStuckRepeats": 2,
-    "maxEmptyPlans": 1,
+    "maxEmptyPlans": 3,
     "maxUrlVisits": 4,
     "revisitUrlMatch": "clean",
     "maxSparsePageRetries": 4,

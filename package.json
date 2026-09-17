@@ -15,12 +15,17 @@
     "launch": "node launch.js",
     "extract": "node cli.js --tree --pretty",
     "agent": "node agent.js",
-    "test": "node test/local-vlm.test.js && node test/odvpa-full.test.js && node test/privacy.test.js",
+    "test": "node test/local-vlm.test.js && node test/odvpa-full.test.js && node test/privacy.test.js && node test/multi-tab.test.js && node test/real-vlm-integration.test.js && node test/ps171-e2e.test.js",
+    "test:tabs": "node test/multi-tab.test.js",
+    "test:ps171": "node test/ps171-e2e.test.js && node test/ps171-benchmark-suite.js",
+    "test:e2e": "node test/ps171-e2e.test.js",
+    "bench:ps171": "node test/ps171-benchmark-suite.js",
     "test:vlm": "node test/local-vlm.test.js",
+    "test:vlm-real": "node test/real-vlm-integration.test.js",
     "test:odvpa": "node test/odvpa-full.test.js",
     "test:privacy": "node test/privacy.test.js",
     "bench:vlm": "node test/vlm-benchmark.js",
-    "bench": "node test/vlm-benchmark.js",
+    "bench": "node test/ps171-benchmark-suite.js",
     "models:check": "node tools/download-lfm-models.js",
     "train-lora": "node tools/train-lora.js"
   },
@@ -54,9 +59,18 @@
   },
   "type": "commonjs",
   "dependencies": {
+    "@huggingface/transformers": "^4.2.0",
     "chrome-remote-interface": "^0.34.0",
     "dotenv": "^17.4.2",
     "markdown-it": "^14.2.0",
+    "onnxruntime-web": "^1.29.0",
     "sharp": "^0.34.5"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@huggingface/transformers>onnxruntime-node#1.24.3": false,
+      "onnxruntime-web>protobufjs#7.6.6": false,
+      "sharp#0.34.5": false
+    }
   }
 }

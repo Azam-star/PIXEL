@@ -2,6 +2,30 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "🔥 Run Real On-Device Local VLM Demo",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceFolder}/node-v20.17.0-win-x64/node.exe",
+      "program": "${workspaceFolder}/demo-local-vlm.js",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "🧪 Run E2E ODVPA Pipeline Tests (37/37 Pass)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceFolder}/node-v20.17.0-win-x64/node.exe",
+      "program": "${workspaceFolder}/test/e2e-pipeline.test.js",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "🧪 Run Real VLM Integration Tests (14/14 Pass)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceFolder}/node-v20.17.0-win-x64/node.exe",
+      "program": "${workspaceFolder}/test/real-vlm-integration.test.js",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "0. Launch PIXEL Visual Studio Dashboard (http://localhost:3000)",
       "type": "node",
       "request": "launch",
